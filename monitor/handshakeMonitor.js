@@ -1,13 +1,13 @@
 const { MongoClient } = require('mongodb');
 const WebSocket = require('ws');
 
-module.exports = function monitorarhandshake(sockets) {
+module.exports = function monitorarhandshake(getSockets) {
   const usuario = encodeURIComponent('cogeti');
   const senha = encodeURIComponent('Cogeti@2022!');
   const uri = `mongodb://${usuario}:${senha}@192.168.7.3:27017/`;
   const client = new MongoClient(uri);
 
-  let lastId = null;  // Inicializando o lastId
+  let lastId = null;
   const fila = []; // Fila com tamanho fixo de 10
 
   async function monitorar() {
@@ -19,30 +19,23 @@ module.exports = function monitorarhandshake(sockets) {
       // Buscar o último documento para definir o lastId
       const ultimoDoc = await colecao.find().sort({ _id: -1 }).limit(1).next();
       if (ultimoDoc) {
-        lastId = ultimoDoc._id;  // Definir o lastId com o último documento existente
+        lastId = ultimoDoc._id;
       }
 
       setInterval(async () => {
         try {
-          if (!lastId) {
-            return; // Se lastId ainda não estiver definido, não faz nada
-          }
+          if (!lastId) return;
 
-          let query = { _id: { $gt: lastId } }; // Filtrar por documentos com _id maior que o lastId
-          const cursor = colecao.find(query).sort({ _id: 1 });
+          const cursor = colecao.find({ _id: { $gt: lastId } }).sort({ _id: 1 });
 
           for await (const doc of cursor) {
-            fila.push(doc); // Adiciona o documento à fila
-
-            // Se a fila ultrapassar 10 itens, remove o primeiro
+            fila.push(doc);
             if (fila.length > 10) {
-              fila.shift();
+              fila.shift(); // Mantém tamanho fixo de 10
             }
-
-            lastId = doc._id;  // Atualiza o lastId após cada documento
+            lastId = doc._id;
           }
 
-          // Envia a fila de 10 documentos via WebSocket a cada 2 segundos
           if (fila.length > 0) {
             console.log('🔔 Enviando fila de documentos da coleção handshake:', fila.length);
             const payload = JSON.stringify({
@@ -50,6 +43,7 @@ module.exports = function monitorarhandshake(sockets) {
               dados: fila
             });
 
+            const sockets = getSockets(); // ✅ obtém os sockets atualizados
             sockets.forEach((s) => {
               if (s.readyState === WebSocket.OPEN) {
                 s.send(payload);

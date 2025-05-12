@@ -13,6 +13,9 @@ wss.on('connection', (socket) => {
   });
 });
 
-monitorarAssociation(sockets);
-monitorarAuthentication(sockets);
-monitorarHandshake(sockets);
+// 🔄 Passe uma função que retorna os sockets atualizados
+const getSockets = () => sockets;
+
+monitorarAssociation(getSockets);
+monitorarAuthentication(getSockets);
+monitorarHandshake(getSockets);
