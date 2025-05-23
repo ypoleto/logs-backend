@@ -18,30 +18,40 @@ async function conectarMongo() {
   }
 }
 
-async function listarHandshakes(dataInicio, dataFim, ssid, user) {
+async function listarHandshakes(params) {
   await conectarMongo();
 
   const filtro = {};
 
-  if (dataInicio || dataFim) {
+  if (params.dataInicio || params.dataFim) {
     filtro.datetime = {};
-    if (dataInicio) {
-      filtro.datetime.$gte = new Date(dataInicio);
+    if (params.dataInicio) {
+      filtro.datetime.$gte = new Date(params.dataInicio);
     }
-    if (dataFim) {
-      filtro.datetime.$lte = new Date(dataFim);
+    if (params.dataFim) {
+      filtro.datetime.$lte = new Date(params.dataFim);
     }
   }
 
-  if (ssid) {
-    filtro.hsSsid = ssid;
+  if (params.ssid) {
+    filtro.hsSsid = params.ssid;
   }
 
-  if (user) {
-    filtro.hsUserName = user;
+  if (params.usuario) {
+    filtro.hsUserName = params.usuario;
   }
 
-  return Handshake.find(filtro).sort({ datetime: -1 });
+  const skip = parseInt(params.skip) || 0;
+  const limit = parseInt(params.limit) || 10;
+  const total = await Handshake.countDocuments(filtro);
+
+  const data = await Handshake.find(filtro)
+    .sort({ datetime: -1 })
+    .skip(skip)
+    .limit(limit);
+
+  return { data, total };
+
 }
 
 
