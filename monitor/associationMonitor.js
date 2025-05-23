@@ -32,7 +32,6 @@ module.exports = function monitorarAssociation(getSockets) {
             lastId = doc._id;
 
             if (buffer.length >= 10) {
-              console.log('🔔 Enviando lote de 10 documentos da coleção association:', buffer.length);
               const payload = JSON.stringify({
                 tipo: 'association',
                 dados: buffer

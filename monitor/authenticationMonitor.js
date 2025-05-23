@@ -37,7 +37,6 @@ module.exports = function monitorarAuthentication(getSockets) {
           }
 
           if (fila.length > 0) {
-            console.log('🔔 Enviando fila de documentos da coleção authentication:', fila.length);
             const payload = JSON.stringify({
               tipo: 'authentication',
               dados: fila

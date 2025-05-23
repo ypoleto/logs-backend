@@ -37,7 +37,6 @@ module.exports = function monitorarhandshake(getSockets) {
           }
 
           if (fila.length > 0) {
-            console.log('🔔 Enviando fila de documentos da coleção handshake:', fila.length);
             const payload = JSON.stringify({
               tipo: 'handshake',
               dados: fila
