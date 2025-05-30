@@ -32,11 +32,15 @@ async function listarHandshakes(params) {
       filtro.datetime.$lte = new Date(params.dataFim);
     }
   }
-
+  if (params.apName) {
+    filtro.hsApName = params.apName;
+  }
   if (params.ssid) {
     filtro.hsSsid = params.ssid;
   }
-
+  if (params.userMac) {
+    filtro.hsUserMac = params.userMac;
+  }
   if (params.usuario) {
     filtro.hsUserName = params.usuario;
   }

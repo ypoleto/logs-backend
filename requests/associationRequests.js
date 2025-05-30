@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const Authentication = require('../models/authentication');
+const Association = require('../models/association');
 
 const usuario = encodeURIComponent("cogeti")
 const senha = encodeURIComponent("Cogeti@2022!")
@@ -18,7 +18,7 @@ async function conectarMongo() {
   }
 }
 
-async function listarAuthentications(params) {
+async function listarAssociations(params) {
   await conectarMongo();
 
   const filtro = {};
@@ -33,23 +33,20 @@ async function listarAuthentications(params) {
     }
   }
   if (params.apName) {
-    filtro.authApName = params.apName;
+    filtro.assocApName = params.apName;
   }
   if (params.ssid) {
-    filtro.authSsid = params.ssid;
+    filtro.assocSsid = params.ssid;
   }
   if (params.userMac) {
-    filtro.authUserMac = params.userMac;
-  }
-  if (params.usuario) {
-    filtro.authUserName = params.usuario;
+    filtro.assocUserMac = params.userMac;
   }
 
   const skip = parseInt(params.skip) || 0;
   const limit = parseInt(params.limit) || 10;
-  const total = await Authentication.countDocuments(filtro);
+  const total = await Association.countDocuments(filtro);
 
-  const data = await Authentication.find(filtro)
+  const data = await Association.find(filtro)
     .sort({ datetime: -1 })
     .skip(skip)
     .limit(limit);
@@ -61,5 +58,5 @@ async function listarAuthentications(params) {
 
 
 module.exports = {
-  listarAuthentications,
+  listarAssociations,
 };
