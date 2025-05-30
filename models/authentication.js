@@ -10,7 +10,7 @@ const authenticationSchema = new mongoose.Schema({
     authResult: String,
     authErrcode: String,
     authAuthId: String,
-    datetime: String,
+    datetime: { type: Date, required: true }
 }, { collection: 'authentication' });
 
 module.exports = mongoose.model('Authentication', authenticationSchema);

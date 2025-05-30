@@ -18,10 +18,43 @@ async function conectarMongo() {
   }
 }
 
-async function listarAuthentications() {
+async function listarAuthentications(params) {
   await conectarMongo();
-  return Authentication.find().sort({ datetime: -1 });
+
+  const filtro = {};
+
+  if (params.dataInicio || params.dataFim) {
+    filtro.datetime = {};
+    if (params.dataInicio) {
+      filtro.datetime.$gte = new Date(params.dataInicio);
+    }
+    if (params.dataFim) {
+      filtro.datetime.$lte = new Date(params.dataFim);
+    }
+  }
+
+  if (params.ssid) {
+    filtro.authSsid = params.ssid;
+  }
+
+  if (params.usuario) {
+    filtro.authUserName = params.usuario;
+  }
+
+  const skip = parseInt(params.skip) || 0;
+  const limit = parseInt(params.limit) || 10;
+  const total = await Authentication.countDocuments(filtro);
+
+  const data = await Authentication.find(filtro)
+    .sort({ datetime: -1 })
+    .skip(skip)
+    .limit(limit);
+
+  return { data, total };
+
 }
+
+
 
 module.exports = {
   listarAuthentications,

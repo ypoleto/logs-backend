@@ -9,12 +9,14 @@ const monitorarAuthentication = require('./monitor/authenticationMonitor');
 const monitorarHandshake = require('./monitor/handshakeMonitor');
 
 const handshakeRoutes = require('./routes/handshakeRoutes');
+const authenticationRoutes = require('./routes/authenticationRoutes');
 
 // ====== Servidor HTTP Express na porta 3000 ======
 const app = express();
 app.use(cors());
 app.use(bodyParser());
 app.use('/handshake', handshakeRoutes);
+app.use('/authentication', authenticationRoutes);
 
 const httpServer = app.listen(3000);
 
