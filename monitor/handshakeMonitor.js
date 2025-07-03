@@ -4,7 +4,7 @@ const WebSocket = require('ws');
 module.exports = function monitorarhandshake(getSockets) {
   const usuario = encodeURIComponent('cogeti');
   const senha = encodeURIComponent('Cogeti@2022!');
-  const uri = `mongodb://${usuario}:${senha}@192.168.7.3:27017/`;
+  const uri = `mongodb://${usuario}:${senha}@192.168.7.13:27017/`;
   const client = new MongoClient(uri);
 
   let lastId = null;

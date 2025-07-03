@@ -1,0 +1,13 @@
+version: '3.8'
+
+services:
+  app:
+    image: node:22.14.0
+    container_name: nodejs_rsyslog
+    working_dir: /app
+    volumes:
+      - .:/app
+    ports:
+      - "3000:3000"
+    command: bash -c " npm run start"  # Ou diretamente `node app.js`
+    restart: unless-stopped

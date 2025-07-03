@@ -1,0 +1,25 @@
+version: '3.8'
+
+services:
+  mongo:
+    image: mongo:4.4
+    container_name: mongo_rsyslog
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: cogeti
+      MONGO_INITDB_ROOT_PASSWORD: Cogeti@2022!
+    ports:
+      - "27017:27017"  # Expondo a porta padrão do MongoDB
+    volumes:
+      - mongo_data:/data/db  # Persistência dos dados do MongoDB
+    networks:
+      - mongo_network
+    restart: unless-stopped  # Reinicia o container automaticamente
+
+
+networks:
+  mongo_network:
+    driver: bridge  # Criando uma rede personalizada para o MongoDB
+
+volumes:
+  mongo_data:
+    driver: local  # Volume para persistência dos dados

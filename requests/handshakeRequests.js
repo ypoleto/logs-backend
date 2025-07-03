@@ -3,7 +3,7 @@ const Handshake = require('../models/handshake');
 
 const usuario = encodeURIComponent("cogeti")
 const senha = encodeURIComponent("Cogeti@2022!")
-const MONGO_URI = process.env.MONGO_URI || `mongodb://${usuario}:${senha}@192.168.7.3:27017/rsyslog_db?authSource=admin`;
+const MONGO_URI = process.env.MONGO_URI || `mongodb://${usuario}:${senha}@192.168.7.13:27017/rsyslog_db?authSource=admin`;
 let conectado = false;
 
 async function conectarMongo() {
