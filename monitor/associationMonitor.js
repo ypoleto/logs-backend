@@ -1,10 +1,18 @@
 const { MongoClient } = require('mongodb');
 const WebSocket = require('ws');
+require('dotenv').config(); 
+
 
 module.exports = function monitorarAssociation(getSockets) {
-  const usuario = encodeURIComponent('cogeti');
-  const senha = encodeURIComponent('Cogeti@2022!');
-  const uri = `mongodb://${usuario}:${senha}@192.168.7.13:27017/`;
+
+  const usuario = encodeURIComponent(process.env.MONGO_USER);
+  const senha = encodeURIComponent(process.env.MONGO_PASS);
+  const host = process.env.MONGO_HOST;
+  const porta = process.env.MONGO_PORT;
+  const db = process.env.MONGO_DB;
+  const authSource = process.env.MONGO_AUTHSOURCE;
+
+  const uri = `mongodb://${usuario}:${senha}@${host}:${porta}/${db}?authSource=${authSource}`;
   const client = new MongoClient(uri);
 
   let lastId = null;

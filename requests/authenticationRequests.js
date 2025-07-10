@@ -1,9 +1,14 @@
 const mongoose = require('mongoose');
 const Authentication = require('../models/authentication');
 
-const usuario = encodeURIComponent("cogeti")
-const senha = encodeURIComponent("Cogeti@2022!")
-const MONGO_URI = process.env.MONGO_URI || `mongodb://${usuario}:${senha}@192.168.7.13:27017/rsyslog_db?authSource=admin`;
+const usuario = encodeURIComponent(process.env.MONGO_USER);
+const senha = encodeURIComponent(process.env.MONGO_PASS);
+const host = process.env.MONGO_HOST;
+const porta = process.env.MONGO_PORT;
+const db = process.env.MONGO_DB;
+const authSource = process.env.MONGO_AUTHSOURCE;
+
+const MONGO_URI = `mongodb://${usuario}:${senha}@${host}:${porta}/${db}?authSource=${authSource}`;
 let conectado = false;
 
 async function conectarMongo() {
